@@ -28,6 +28,7 @@ public class RealizarSimulacionTest extends TestCase {
 	static class Configuracion {
 
 		private ZendeskService zendeskService;
+		private IMocksControl control;
 		private Map<String, Object> environment;
 		private PortalClientesWebEJBRemote portalclientesWebEJBRemote;
 		private RestTemplate restTemplate;
@@ -38,16 +39,17 @@ public class RealizarSimulacionTest extends TestCase {
 			this.zendeskService = zendeskService;
 
 			IMocksControl control = EasyMock.createControl();
+			this.control = control;
 
 			Map<String, Object> environment = new HashMap<String, Object>();
-			environment.put("zendesk.ticket", "");
-			environment.put("zendesk.token", "");
-			environment.put("zendesk.url", "");
-			environment.put("zendesk.user", "");
-			environment.put("tarjetas.getDatos", "");
-			environment.put("cliente.getDatos", "");
-			environment.put("zendesk.error.mail.funcionalidad", "");
-			environment.put("zendesk.error.destinatario", "");
+			environment.put("zendesk.ticket", "null");
+			environment.put("zendesk.token", "token");
+			environment.put("zendesk.url", "http://localhost:80/zendesk");
+			environment.put("zendesk.user", "user");
+			environment.put("tarjetas.getDatos", "http://localhost:80/tarjetas/getDatos/");
+			environment.put("cliente.getDatos", "http://localhost:80/cliente/getDatos/");
+			environment.put("zendesk.error.mail.funcionalidad", "42");
+			environment.put("zendesk.error.destinatario", "destinatario@localhost");
 			this.environment = environment;
 			this.portalclientesWebEJBRemote = control.createMock(PortalClientesWebEJBRemote.class);
 			this.restTemplate = control.createMock(RestTemplate.class);
@@ -57,6 +59,11 @@ public class RealizarSimulacionTest extends TestCase {
 		@Bean
 		public ZendeskService zendeskService() {
 			return zendeskService;
+		}
+
+		@Bean
+		public IMocksControl easymockcontrol() {
+			return control;
 		}
 
 		@Bean(name = "envPC")
@@ -84,18 +91,36 @@ public class RealizarSimulacionTest extends TestCase {
 	@Autowired
 	private ZendeskService zendeskService;
 
-    /**
-     * Rigourous Test :-)
-     */
-    @Test
-    public void testApp() {
+	@Autowired
+	private IMocksControl control;
+
+
+	@Autowired
+	private PortalClientesWebEJBRemote portalclientesWebEJBRemote;
+
+	@Autowired
+	private RestTemplate restTemplate;
+
+	@Autowired
+	private MensajeriaService emailService;
+
+	@Test
+	public void testApp() {
+		control.reset();
+
+		EasyMock.expect(restTemplate.getForObject(EasyMock.eq("http://localhost:8080/test-endpoint"), EasyMock.eq(com.mycorp.support.DatosCliente.class), EasyMock.anyObject(String.class))).andThrow(new UnsupportedOperationException("TESTING"));
+
+		emailService.enviar(EasyMock.anyObject(com.mycorp.support.CorreoElectronico.class));
+		EasyMock.expectLastCall();
+
+		control.replay();
+
 		UsuarioAlta usuarioAlta = new UsuarioAlta();
 		String userAgent = "TEST";
-		try {
-			zendeskService.altaTicketZendesk(usuarioAlta, userAgent);
-		} catch (Exception e) {
-			// testing in progress ;)
-		}
-    }
+
+		zendeskService.altaTicketZendesk(usuarioAlta, userAgent);
+
+		control.verify();
+	}
 
 }
