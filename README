@@ -1,0 +1,14 @@
+Establecer JAVA_HOME con una jdk 1.7 o superior
+	set JAVA_HOME=C:\Program Files\Java\jdk1.7.0_80
+
+Se asume que maven está en el path. Si no, incluirlo con:
+	set PATH=%PATH%;C:\Program Files\maven\bin
+
+Importar la dependencia necesaria con:
+	mvn install:install-file -Dfile=sportalclientesweb-1.19.0.jar -DgroupId=sanitas.bravo.clientes -DartifactId=sportalclientesweb -Dversion=1.19.0 -Dpackaging=jar
+(las coordenadas se han obtenido del comentario en el fichero pom.xml original)
+
+Para generar el entregable es necesario, desde el directorio raíz del proyecto (donde se encuentra el fichero pom.xml y el directorio src), el comando:
+	mvn package
+
+Esto creará el fichero test2-1.0-SNAPSHOT.jar en el subdirectorio target.
