@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.mycorp.support.MensajeriaService;
 
+import org.junit.Assert;
 import junit.framework.TestCase;
 import portalclientesweb.ejb.interfaces.PortalClientesWebEJBRemote;
 import util.datos.UsuarioAlta;
@@ -33,13 +34,22 @@ public class RealizarSimulacionTest extends TestCase {
 		private PortalClientesWebEJBRemote portalclientesWebEJBRemote;
 		private RestTemplate restTemplate;
 		private MensajeriaService emailService;
+		private Zendesk zendesk;
 
 		public Configuracion() {
-			ZendeskService zendeskService = new ZendeskService();
-			this.zendeskService = zendeskService;
-
 			IMocksControl control = EasyMock.createControl();
 			this.control = control;
+
+			final Zendesk zendesk = control.createMock(Zendesk.class);
+			ZendeskService zendeskService = new ZendeskService() {
+
+				@Override
+				protected Zendesk newZendesk() {
+					return zendesk;
+				}
+
+			};
+			this.zendeskService = zendeskService;
 
 			Map<String, Object> environment = new HashMap<String, Object>();
 			environment.put("zendesk.ticket", "null");
@@ -54,6 +64,7 @@ public class RealizarSimulacionTest extends TestCase {
 			this.portalclientesWebEJBRemote = control.createMock(PortalClientesWebEJBRemote.class);
 			this.restTemplate = control.createMock(RestTemplate.class);
 			this.emailService = control.createMock(MensajeriaService.class);
+			this.zendesk = zendesk;
 		}
 
 		@Bean
@@ -86,6 +97,12 @@ public class RealizarSimulacionTest extends TestCase {
 			return emailService;
 		}
 
+		@Bean
+		public Zendesk zendesk() {
+			return zendesk;
+		}
+
+
 	}
 
 	@Autowired
@@ -104,11 +121,18 @@ public class RealizarSimulacionTest extends TestCase {
 	@Autowired
 	private MensajeriaService emailService;
 
+	@Autowired
+	private Zendesk zendesk;
+
 	@Test
 	public void testApp() {
 		control.reset();
 
 		EasyMock.expect(restTemplate.getForObject(EasyMock.eq("http://localhost:8080/test-endpoint"), EasyMock.eq(com.mycorp.support.DatosCliente.class), EasyMock.anyObject(String.class))).andThrow(new UnsupportedOperationException("TESTING"));
+
+		EasyMock.expect(zendesk.createTicket(EasyMock.anyObject(com.mycorp.support.Ticket.class))).andThrow(new UnsupportedOperationException("TESTING"));
+		zendesk.close();
+		EasyMock.expectLastCall().anyTimes();
 
 		emailService.enviar(EasyMock.anyObject(com.mycorp.support.CorreoElectronico.class));
 		EasyMock.expectLastCall();
@@ -118,9 +142,11 @@ public class RealizarSimulacionTest extends TestCase {
 		UsuarioAlta usuarioAlta = new UsuarioAlta();
 		String userAgent = "TEST";
 
-		zendeskService.altaTicketZendesk(usuarioAlta, userAgent);
+		String response = zendeskService.altaTicketZendesk(usuarioAlta, userAgent);
 
 		control.verify();
+
+		Assert.assertEquals("Nº tarjeta Sanitas o Identificador: null\\nTipo documento: 0\\nNº documento: null\\nEmail personal: null\\nNº móvil: null\\nUser Agent: TEST\\n\\nDatos recuperados de BRAVO:\\n\\n", response);
 	}
 
 }

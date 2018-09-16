@@ -203,7 +203,7 @@ public class ZendeskService {
                 parseJsonBravo(datosServicio));
         ticket = ticket.replaceAll("["+ESCAPED_LINE_SEPARATOR+"]", " ");
 
-        try(Zendesk zendesk = new Zendesk.Builder(URL_ZENDESK).setUsername(ZENDESK_USER).setToken(TOKEN_ZENDESK).build()){
+        try(Zendesk zendesk = newZendesk()){
             //Ticket
             Ticket petiZendesk = mapper.readValue(ticket, Ticket.class);
             zendesk.createTicket(petiZendesk);
@@ -229,6 +229,15 @@ public class ZendeskService {
 
         return datosUsuario.toString();
     }
+
+	/**
+	 * Método factoría para encapsular la creación del Zendesk
+	 * 
+	 * @return Zendesk configurado
+	 */
+	protected Zendesk newZendesk() {
+		return new Zendesk.Builder(URL_ZENDESK).setUsername(ZENDESK_USER).setToken(TOKEN_ZENDESK).build();
+	}
 
     public List< ValueCode > getTiposDocumentosRegistro() {
         return Arrays.asList( new ValueCode(), new ValueCode() ); // simulacion servicio externo
