@@ -65,9 +65,6 @@ public class ZendeskService {
     @Value("#{envPC['zendesk.error.destinatario']}")
     public String ZENDESK_ERROR_DESTINATARIO = "";
 
-    private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-
-
     /** The portalclientes web ejb remote. */
     @Autowired
     // @Qualifier("portalclientesWebEJB")
@@ -209,8 +206,10 @@ public class ZendeskService {
 
             datosBravo.append("Teléfono: ").append(cliente.getGenTGrupoTmk()).append(ESCAPED_LINE_SEPARATOR);
 
-
-            datosBravo.append("Feha de nacimiento: ").append(formatter.format(formatter.parse(cliente.getFechaNacimiento()))).append(ESCAPED_LINE_SEPARATOR);
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			String fechaNacimiento = cliente.getFechaNacimiento();
+			fechaNacimiento = formatter.format(formatter.parse(fechaNacimiento)); // TODO considerar si esta linea sobra
+            datosBravo.append("Feha de nacimiento: ").append(fechaNacimiento).append(ESCAPED_LINE_SEPARATOR);
 
             List< ValueCode > tiposDocumentos = getTiposDocumentosRegistro();
             for(int i = 0; i < tiposDocumentos.size();i++)
