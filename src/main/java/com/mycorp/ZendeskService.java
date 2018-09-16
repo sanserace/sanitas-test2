@@ -2,7 +2,9 @@ package com.mycorp;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -79,6 +81,15 @@ public class ZendeskService {
     @Autowired
     @Qualifier( "emailService" )
     MensajeriaService emailService;
+
+	private static final Map<Integer, String> TIPOS_CLIENTE;
+	static {
+		Map<Integer, String> tiposCliente = new HashMap<Integer, String>();
+		tiposCliente.put(Integer.valueOf(1), "POTENCIAL");
+		tiposCliente.put(Integer.valueOf(2), "REAL");
+		tiposCliente.put(Integer.valueOf(3), "PROSPECTO");
+		TIPOS_CLIENTE = tiposCliente;
+	}
 
     /**
      * Crea un ticket en Zendesk. Si se ha informado el nº de tarjeta, obtiene los datos asociados a dicha tarjeta de un servicio externo.
@@ -175,17 +186,9 @@ public class ZendeskService {
             datosBravo.append("Número documento: ").append(cliente.getNumeroDocAcred()).append(ESCAPED_LINE_SEPARATOR);
 
             datosBravo.append("Tipo cliente: ");
-            switch (cliente.getGenTTipoCliente()) {
-            case 1:
-                datosBravo.append("POTENCIAL").append(ESCAPED_LINE_SEPARATOR);
-                break;
-            case 2:
-                datosBravo.append("REAL").append(ESCAPED_LINE_SEPARATOR);
-                break;
-            case 3:
-                datosBravo.append("PROSPECTO").append(ESCAPED_LINE_SEPARATOR);
-                break;
-            }
+			if (TIPOS_CLIENTE.containsKey(cliente.getGenTTipoCliente())) {
+				datosBravo.append(TIPOS_CLIENTE.get(cliente.getGenTTipoCliente())).append(ESCAPED_LINE_SEPARATOR);
+			}
 
             datosBravo.append("ID estado del cliente: ").append(cliente.getGenTStatus()).append(ESCAPED_LINE_SEPARATOR);
 

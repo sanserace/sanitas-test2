@@ -1,6 +1,8 @@
 package com.mycorp;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.easymock.EasyMock;
@@ -18,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.mycorp.support.DatosCliente;
 import com.mycorp.support.MensajeriaService;
+import com.mycorp.support.ValueCode;
 
 import org.junit.Assert;
 import junit.framework.TestCase;
@@ -49,6 +52,17 @@ public class RealizarSimulacionTest extends TestCase {
 				@Override
 				protected Zendesk newZendesk() {
 					return zendesk;
+				}
+
+				@Override
+				public List<ValueCode> getTiposDocumentosRegistro() {
+					ValueCode vc1 = new ValueCode();
+					vc1.setCode("1");
+					vc1.setValue("V1");
+					ValueCode vc0 = new ValueCode();
+					vc0.setCode("0");
+					vc0.setValue("V0");
+					return Arrays.asList(vc1, vc0);
 				}
 
 			};
@@ -105,7 +119,6 @@ public class RealizarSimulacionTest extends TestCase {
 			return zendesk;
 		}
 
-
 	}
 
 	@Autowired
@@ -113,7 +126,6 @@ public class RealizarSimulacionTest extends TestCase {
 
 	@Autowired
 	private IMocksControl control;
-
 
 	@Autowired
 	private PortalClientesWebEJBRemote portalclientesWebEJBRemote;
@@ -286,7 +298,7 @@ public class RealizarSimulacionTest extends TestCase {
 
 		control.verify();
 
-		assertEquals("Nº tarjeta Sanitas o Identificador: 123456\\nTipo documento: 1\\nNº documento: 12345678\\nEmail personal: yo@localhost\\nNº móvil: 123456879\\nUser Agent: TEST\\n\\nDatos recuperados de BRAVO:\\n\\nTeléfono: 912345678\\nFeha de nacimiento: 01/01/1990\\n", response);
+		assertEquals("Nº tarjeta Sanitas o Identificador: 123456\\nTipo documento: 1\\nNº documento: 12345678\\nEmail personal: yo@localhost\\nNº móvil: 123456879\\nUser Agent: TEST\\n\\nDatos recuperados de BRAVO:\\n\\nTeléfono: 912345678\\nFeha de nacimiento: 01/01/1990\\nTipo de documento: V0\\nNúmero documento: 87654321\\nTipo cliente: POTENCIAL\\nID estado del cliente: 0\\nID motivo de alta cliente: 0\\nRegistrado: No\\n\\n", response);
 	}
 
 	@Test
@@ -327,7 +339,7 @@ public class RealizarSimulacionTest extends TestCase {
 
 		control.verify();
 
-		assertEquals("Nº tarjeta Sanitas o Identificador: 123456\\nTipo documento: 1\\nNº documento: 12345678\\nEmail personal: yo@localhost\\nNº móvil: 123456879\\nUser Agent: TEST\\n\\nDatos recuperados de BRAVO:\\n\\nTeléfono: 912345678\\nFeha de nacimiento: 01/01/1990\\n", response);
+		assertEquals("Nº tarjeta Sanitas o Identificador: 123456\\nTipo documento: 1\\nNº documento: 12345678\\nEmail personal: yo@localhost\\nNº móvil: 123456879\\nUser Agent: TEST\\n\\nDatos recuperados de BRAVO:\\n\\nTeléfono: 912345678\\nFeha de nacimiento: 01/01/1990\\nTipo de documento: V0\\nNúmero documento: 87654321\\nTipo cliente: POTENCIAL\\nID estado del cliente: 0\\nID motivo de alta cliente: 0\\nRegistrado: No\\n\\n", response);
 	}
 
 	@Test
@@ -365,7 +377,7 @@ public class RealizarSimulacionTest extends TestCase {
 
 		control.verify();
 
-		assertEquals("Nº tarjeta Sanitas o Identificador: 123456\\nTipo documento: 1\\nNº documento: 12345678\\nEmail personal: yo@localhost\\nNº móvil: 123456879\\nUser Agent: TEST\\n\\nDatos recuperados de BRAVO:\\n\\nTeléfono: 912345678\\nFeha de nacimiento: 01/01/1990\\n", response);
+		assertEquals("Nº tarjeta Sanitas o Identificador: 123456\\nTipo documento: 1\\nNº documento: 12345678\\nEmail personal: yo@localhost\\nNº móvil: 123456879\\nUser Agent: TEST\\n\\nDatos recuperados de BRAVO:\\n\\nTeléfono: 912345678\\nFeha de nacimiento: 01/01/1990\\nTipo de documento: V0\\nNúmero documento: 87654321\\nTipo cliente: POTENCIAL\\nID estado del cliente: 0\\nID motivo de alta cliente: 0\\nRegistrado: No\\n\\n", response);
 	}
 
 	@Test
@@ -484,7 +496,7 @@ public class RealizarSimulacionTest extends TestCase {
 
 		control.verify();
 
-		assertEquals("Nº de poliza/colectivo: 12345/12345678\\nTipo documento: 1\\nNº documento: 12345678\\nEmail personal: yo@localhost\\nNº móvil: 123456879\\nUser Agent: TEST\\n\\nDatos recuperados de BRAVO:\\n\\nTeléfono: 912345678\\nFeha de nacimiento: 01/01/1990\\n", response);
+		assertEquals("Nº de poliza/colectivo: 12345/12345678\\nTipo documento: 1\\nNº documento: 12345678\\nEmail personal: yo@localhost\\nNº móvil: 123456879\\nUser Agent: TEST\\n\\nDatos recuperados de BRAVO:\\n\\nTeléfono: 912345678\\nFeha de nacimiento: 01/01/1990\\nTipo de documento: V0\\nNúmero documento: 87654321\\nTipo cliente: POTENCIAL\\nID estado del cliente: 0\\nID motivo de alta cliente: 0\\nRegistrado: No\\n\\n", response);
 	}
 
 	@Test
@@ -532,7 +544,7 @@ public class RealizarSimulacionTest extends TestCase {
 
 		control.verify();
 
-		assertEquals("Nº de poliza/colectivo: 12345/12345678\\nTipo documento: 1\\nNº documento: 12345678\\nEmail personal: yo@localhost\\nNº móvil: 123456879\\nUser Agent: TEST\\n\\nDatos recuperados de BRAVO:\\n\\nTeléfono: 912345678\\nFeha de nacimiento: 01/01/1990\\n", response);
+		assertEquals("Nº de poliza/colectivo: 12345/12345678\\nTipo documento: 1\\nNº documento: 12345678\\nEmail personal: yo@localhost\\nNº móvil: 123456879\\nUser Agent: TEST\\n\\nDatos recuperados de BRAVO:\\n\\nTeléfono: 912345678\\nFeha de nacimiento: 01/01/1990\\nTipo de documento: V0\\nNúmero documento: 87654321\\nTipo cliente: POTENCIAL\\nID estado del cliente: 0\\nID motivo de alta cliente: 0\\nRegistrado: No\\n\\n", response);
 	}
 
 	@Test
@@ -577,7 +589,52 @@ public class RealizarSimulacionTest extends TestCase {
 
 		control.verify();
 
-		assertEquals("Nº de poliza/colectivo: 12345/12345678\\nTipo documento: 1\\nNº documento: 12345678\\nEmail personal: yo@localhost\\nNº móvil: 123456879\\nUser Agent: TEST\\n\\nDatos recuperados de BRAVO:\\n\\nTeléfono: 912345678\\nFeha de nacimiento: 01/01/1990\\n", response);
+		assertEquals("Nº de poliza/colectivo: 12345/12345678\\nTipo documento: 1\\nNº documento: 12345678\\nEmail personal: yo@localhost\\nNº móvil: 123456879\\nUser Agent: TEST\\n\\nDatos recuperados de BRAVO:\\n\\nTeléfono: 912345678\\nFeha de nacimiento: 01/01/1990\\nTipo de documento: V0\\nNúmero documento: 87654321\\nTipo cliente: POTENCIAL\\nID estado del cliente: 0\\nID motivo de alta cliente: 0\\nRegistrado: No\\n\\n", response);
+	}
+
+	@Test
+	public void testPolizaOkClienteTipoDesconocidoNoRegistradoTicketOk() {
+		control.reset();
+
+		util.datos.DatosPersonales tomador = new util.datos.DatosPersonales();
+		tomador.setNombre("NOMBRE-TOMADOR");
+		tomador.setApellido1("APELLIDO1-TOMADOR");
+		tomador.setApellido2("APELLIDO2-TOMADOR");
+		tomador.setIdentificador("4444");
+		util.datos.DetallePoliza detallePolizaResponse = new util.datos.DetallePoliza();
+		detallePolizaResponse.setTomador(tomador);
+		EasyMock.expect(portalclientesWebEJBRemote.recuperarDatosPoliza(EasyMock.anyObject(util.datos.PolizaBasico.class))).andReturn(detallePolizaResponse);
+
+		DatosCliente cliente = new DatosCliente();
+		cliente.setGenTGrupoTmk(Integer.valueOf(912345678));
+		cliente.setFechaNacimiento("01/01/1990");
+		cliente.setGenCTipoDocumento(Integer.valueOf(0));
+		cliente.setNumeroDocAcred("87654321");
+		cliente.setGenTTipoCliente(Integer.valueOf(4));
+		cliente.setGenTStatus(Integer.valueOf(0));
+		cliente.setIdMotivoAlta(Integer.valueOf(0));
+		cliente.setfInactivoWeb(null);
+		EasyMock.expect(restTemplate.getForObject(EasyMock.eq("http://localhost:8080/test-endpoint"), EasyMock.eq(com.mycorp.support.DatosCliente.class), EasyMock.anyObject(String.class))).andReturn(cliente);
+
+		EasyMock.expect(zendesk.createTicket(EasyMock.anyObject(com.mycorp.support.Ticket.class))).andReturn(null);
+		zendesk.close();
+		EasyMock.expectLastCall().anyTimes();
+
+		control.replay();
+
+		UsuarioAlta usuarioAlta = new UsuarioAlta();
+		usuarioAlta.setTipoDocAcreditativo(1);
+		usuarioAlta.setNumDocAcreditativo("12345678");
+		usuarioAlta.setEmail("yo@localhost");
+		usuarioAlta.setNumeroTelefono("123456879");
+		usuarioAlta.setNumPoliza("12345");
+		String userAgent = "TEST";
+
+		String response = zendeskService.altaTicketZendesk(usuarioAlta, userAgent);
+
+		control.verify();
+
+		assertEquals("Nº de poliza/colectivo: 12345/12345678\\nTipo documento: 1\\nNº documento: 12345678\\nEmail personal: yo@localhost\\nNº móvil: 123456879\\nUser Agent: TEST\\n\\nDatos recuperados de BRAVO:\\n\\nTeléfono: 912345678\\nFeha de nacimiento: 01/01/1990\\nTipo de documento: V0\\nNúmero documento: 87654321\\nTipo cliente: ID estado del cliente: 0\\nID motivo de alta cliente: 0\\nRegistrado: Sí\\n\\n", response);
 	}
 
 }
